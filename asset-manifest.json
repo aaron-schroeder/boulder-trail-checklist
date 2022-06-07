@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/boulder-trail-checklist/static/css/main.58c6720b.css",
+    "main.js": "/boulder-trail-checklist/static/js/main.b29c2ccc.js",
+    "static/js/787.cda612ba.chunk.js": "/boulder-trail-checklist/static/js/787.cda612ba.chunk.js",
+    "index.html": "/boulder-trail-checklist/index.html",
+    "main.58c6720b.css.map": "/boulder-trail-checklist/static/css/main.58c6720b.css.map",
+    "main.b29c2ccc.js.map": "/boulder-trail-checklist/static/js/main.b29c2ccc.js.map",
+    "787.cda612ba.chunk.js.map": "/boulder-trail-checklist/static/js/787.cda612ba.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.58c6720b.css",
+    "static/js/main.b29c2ccc.js"
+  ]
+}
