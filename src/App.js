@@ -11,32 +11,50 @@ class App extends Component {
 
     this.geojsonRef = createRef();
 
-    this.state = {
-      // list: [1, 2, 3],
-      hiked: new Set()
-    };
+    this.state = JSON.parse(window.localStorage.getItem('state')) || {
+      hiked: []
+    }
 
+    this.hasHiked = this.hasHiked.bind(this);
     this.handleSegSelection = this.handleSegSelection.bind(this);
-    // this.styleGeojson = this.styleGeojson.bind(this);
+    this.styleGeojson = this.styleGeojson.bind(this);
+  }
+
+  setState(state) {
+    window.localStorage.setItem('state', JSON.stringify(state));
+    super.setState(state);
+  }
+
+  hasHiked(segId) {
+    return this.state.hiked.indexOf(segId) > -1
   }
 
   handleSegSelection(id) {
-  
-    const newSet = new Set(this.state.hiked);
-    if (this.state.hiked.has(id)) {
-      newSet.delete(id);
-      this.setState({hiked: newSet})
+    const newArray = new Array(...this.state.hiked);
+    const index = this.state.hiked.indexOf(id);
+    if (index > -1) {
+      newArray.splice(index, 1); // 2nd parameter means remove one item only
     } else {
-      newSet.add(id);
-      this.setState({hiked: newSet})
+      newArray.push(id);
     }
+    this.setState({hiked: newArray});
   }
+
+  styleGeojson(feature) {
+    if (
+      typeof feature !== 'undefined'
+      && feature !== null
+      && this.hasHiked(feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"])
+    ){
+      return {color: "#4B1BDE"}
+    }
+  };
 
   render() {
     return (
       <div>
         <div>
-          {this.state.hiked}
+          {JSON.stringify(this.state.hiked)}
         </div>
         <MapContainer 
           center={[40.0, -105.25]}
@@ -51,7 +69,7 @@ class App extends Component {
             data={trailData}
             attribution='City of Boulder OSMP'
             ref={this.geojsonRef}
-            // style={this.styleGeojson}
+            style={this.styleGeojson}
             // eventHandlers={{
             //   click: (e) => {
             //     // console.log(e);
@@ -73,7 +91,7 @@ class App extends Component {
                 'mouseover': (e) => {
                   const segId = feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"];
                   const trailName = feature.properties["GISPROD3.OSMP.TrailsOSMP.TRAILNAME"]
-                  const tooltip = this.state.hiked.has(segId) ? trailName + '<br>Hiked!!' : trailName;
+                  const tooltip = this.state.hiked.indexOf(segId) > -1 ? trailName + '<br>Hiked!!' : trailName;
                   layer.bindTooltip(tooltip);
                   // layer.openTooltip(e.latlng);
                   layer.openTooltip();
@@ -85,7 +103,7 @@ class App extends Component {
                 'click': (e) => {
                   const segId = feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"];
                   this.handleSegSelection(segId);
-                  if (this.state.hiked.has(segId)) {
+                  if (this.hasHiked(segId)) {
                     layer.setStyle({color: "#4B1BDE"});
                     // removeSeg(segId);
                   } else {
