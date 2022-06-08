@@ -1,27 +1,36 @@
-import { Component, createRef } from "react"
-import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet'
+import { Component, createRef } from 'react'
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 
 import './App.css';
-import * as trailData from "./data/all_osmp_trails.json";
+import getData from './util.js'
 
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.geojsonRef = createRef();
-
-    this.state = JSON.parse(window.localStorage.getItem('state')) || {
-      hiked: []
+    this.state = {
+      hiked: JSON.parse(window.localStorage.getItem('hiked')) || [],
+      trailData: null
     }
 
+    this.geojsonRef = createRef();
+
+    this.getData = getData.bind(this);
     this.hasHiked = this.hasHiked.bind(this);
-    this.handleSegSelection = this.handleSegSelection.bind(this);
+    this.handleSegClick = this.handleSegClick.bind(this);
     this.styleGeojson = this.styleGeojson.bind(this);
   }
 
+  componentDidMount() {
+    this.getData()
+      .then(geojsonData => this.setState({trailData: geojsonData}));
+  }
+
   setState(state) {
-    window.localStorage.setItem('state', JSON.stringify(state));
+    if (state.hasOwnProperty('hiked')) {
+      window.localStorage.setItem('hiked', JSON.stringify(state.hiked));
+    };
     super.setState(state);
   }
 
@@ -29,11 +38,11 @@ class App extends Component {
     return this.state.hiked.indexOf(segId) > -1
   }
 
-  handleSegSelection(id) {
+  handleSegClick(id) {
     const newArray = new Array(...this.state.hiked);
     const index = this.state.hiked.indexOf(id);
     if (index > -1) {
-      newArray.splice(index, 1); // 2nd parameter means remove one item only
+      newArray.splice(index, 1);
     } else {
       newArray.push(id);
     }
@@ -64,61 +73,50 @@ class App extends Component {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          <GeoJSON 
-            key='whatever'
-            data={trailData}
-            attribution='City of Boulder OSMP'
-            ref={this.geojsonRef}
-            style={this.styleGeojson}
-            // eventHandlers={{
-            //   click: (e) => {
-            //     // console.log(e);
-            //     // console.log(e.target);
-            //     console.log(e.propagatedFrom);
-            //     // e.propagatedFrom.setStyle({color: "#4B1BDE"});
-            //     // setState({'hiked': e.propagatedFrom})
-            //   },
-            //   // mouseover: (e) => {
-            //   //   // console.log(e);
-            //   //   // console.log(e.target);
-            //   //   // e.target.setStyle({color: "#4B1BDE"});
-            //   //   console.log(e.propagatedFrom);
-            //   //   e.propagatedFrom.setStyle({color: "#4B1BDE"});
-            //   // },
-            // }}
-            onEachFeature={(feature, layer) => {
-              layer.on({
-                'mouseover': (e) => {
-                  const segId = feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"];
-                  const trailName = feature.properties["GISPROD3.OSMP.TrailsOSMP.TRAILNAME"]
-                  const tooltip = this.state.hiked.indexOf(segId) > -1 ? trailName + '<br>Hiked!!' : trailName;
-                  layer.bindTooltip(tooltip);
-                  // layer.openTooltip(e.latlng);
-                  layer.openTooltip();
-                },
-                'mouseout': () => {
-                  layer.unbindTooltip();
-                  layer.closeTooltip();
-                },
-                'click': (e) => {
-                  const segId = feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"];
-                  this.handleSegSelection(segId);
-                  if (this.hasHiked(segId)) {
-                    layer.setStyle({color: "#4B1BDE"});
-                    // removeSeg(segId);
-                  } else {
-                    // addSeg(segId);
+          {
+            this.state.trailData !== null && 
+            <GeoJSON 
+              key='whatever'
+              data={this.state.trailData}
+              attribution='City of Boulder OSMP'
+              ref={this.geojsonRef}
+              style={this.styleGeojson}
+              onEachFeature={(feature, layer) => {
+                const segId = feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"];
+                const trailName = feature.properties["GISPROD3.OSMP.TrailsOSMP.TRAILNAME"]
+
+                layer.on({
+                  'mouseover': (e) => {
+                    const tooltip = this.hasHiked(segId) ? trailName + '<br>Hiked!!' : trailName;
+                    layer.bindTooltip(tooltip);
+                    // layer.openTooltip(e.latlng);
+                    layer.openTooltip();
+                    layer.setStyle({
+                      weight: 7,
+                      color: 'red',
+                    });
+                  },
+                  'mouseout': (e) => {
+                    layer.unbindTooltip();
+                    layer.closeTooltip();
                     this.geojsonRef.current.resetStyle(e.target);
-                  }
-                },
-              });
-            }}
-          />
+                  },
+                  'click': (e) => {
+                    this.handleSegClick(segId);
+                    if (this.hasHiked(segId)) {
+                      layer.setStyle({color: "#4B1BDE"});
+                    } else {
+                      this.geojsonRef.current.resetStyle(e.target);
+                    }
+                  },
+                });
+              }}
+            />
+          }
         </MapContainer>
       </div>
     );
   }
-
 }
 
 export default App;
