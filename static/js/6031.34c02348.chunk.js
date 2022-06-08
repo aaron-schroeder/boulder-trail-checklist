@@ -1,2 +1,0 @@
-(self.webpackChunkfrontend=self.webpackChunkfrontend||[]).push([[6031],{26031:function(n){function e(n){return Promise.resolve().then((function(){var e=new Error("Cannot find module '"+n+"'");throw e.code="MODULE_NOT_FOUND",e}))}e.keys=function(){return[]},e.resolve=e,e.id=26031,n.exports=e}}]);
-//# sourceMappingURL=6031.34c02348.chunk.js.map
