@@ -126,6 +126,15 @@ class App extends Component {
           }
         </MapContainer>
         <div style={{height: '30vh', overflow: 'scroll'}}>
+          {this.state.trailData === null &&
+            <div style={{
+              display: 'flex',
+              height: '90%',
+              fontSize: '24px',
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>Retrieving geoJSON trail data...</div> 
+          }
           {
             this.state.trailData !== null &&
             <ul>
