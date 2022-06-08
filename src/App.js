@@ -1,6 +1,7 @@
 import { Component, createRef } from 'react'
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 
+import './App.css'
 import getData from './util.js'
 
 
@@ -74,12 +75,11 @@ class App extends Component {
 
   render() {
     return (
-      <div style={{height: '100vh', overflow: 'hidden'}}>
+      <div id='container'>
         <MapContainer 
           center={[40.013970, -105.252197]}
           zoom={17}
           whenCreated={mapInstance => {this.mapRef.current = mapInstance}}
-          style={{width: '100%', height: '70vh'}}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -125,15 +125,9 @@ class App extends Component {
             />
           }
         </MapContainer>
-        <div style={{height: '30vh', overflow: 'scroll'}}>
+        <div id='checklist'>
           {this.state.trailData === null &&
-            <div style={{
-              display: 'flex',
-              height: '90%',
-              fontSize: '24px',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}>Retrieving geoJSON trail data...</div> 
+            <div id='loading'>Retrieving geoJSON trail data...</div> 
           }
           {
             this.state.trailData !== null &&
