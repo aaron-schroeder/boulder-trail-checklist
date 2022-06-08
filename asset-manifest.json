@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/boulder-trail-checklist/static/css/main.e6c13ad2.css",
-    "main.js": "/boulder-trail-checklist/static/js/main.f2364999.js",
+    "main.css": "/boulder-trail-checklist/static/css/main.e29c45df.css",
+    "main.js": "/boulder-trail-checklist/static/js/main.d65b94e5.js",
     "static/js/621.0b92441d.chunk.js": "/boulder-trail-checklist/static/js/621.0b92441d.chunk.js",
     "static/js/334.377e40c2.chunk.js": "/boulder-trail-checklist/static/js/334.377e40c2.chunk.js",
     "static/js/787.cda612ba.chunk.js": "/boulder-trail-checklist/static/js/787.cda612ba.chunk.js",
     "index.html": "/boulder-trail-checklist/index.html",
-    "main.e6c13ad2.css.map": "/boulder-trail-checklist/static/css/main.e6c13ad2.css.map",
-    "main.f2364999.js.map": "/boulder-trail-checklist/static/js/main.f2364999.js.map",
+    "main.e29c45df.css.map": "/boulder-trail-checklist/static/css/main.e29c45df.css.map",
+    "main.d65b94e5.js.map": "/boulder-trail-checklist/static/js/main.d65b94e5.js.map",
     "334.377e40c2.chunk.js.map": "/boulder-trail-checklist/static/js/334.377e40c2.chunk.js.map",
     "787.cda612ba.chunk.js.map": "/boulder-trail-checklist/static/js/787.cda612ba.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.e6c13ad2.css",
-    "static/js/main.f2364999.js"
+    "static/css/main.e29c45df.css",
+    "static/js/main.d65b94e5.js"
   ]
 }
