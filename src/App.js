@@ -19,6 +19,7 @@ class App extends Component {
     this.hasHiked = this.hasHiked.bind(this);
     this.handleSegClick = this.handleSegClick.bind(this);
     this.styleGeojson = this.styleGeojson.bind(this);
+    this.getGeojsonFeature = this.getGeojsonFeature.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +58,15 @@ class App extends Component {
       return {color: '#4B1BDE'}
     }
   };
+
+  getGeojsonFeature(segId) {
+    for (var i = 0; i < this.state.trailData.features.length; i++) {
+      let feature = this.state.trailData.features[i];
+      if (feature.properties['GISPROD3.OSMP.TrailsOSMP.SEGMENTID'] === segId){
+        return feature
+      }
+    }
+  }
 
   render() {
     return (
@@ -111,12 +121,15 @@ class App extends Component {
           }
         </MapContainer>
         <div style={{height: '30vh', overflow: 'scroll'}}>
-          <ul>
-            {this.state.hiked.map(function(segId, index) {
-              let feature = this.getGeojsonFeature(segId);
-              return <li key={index}>{segId}</li>;
-            })}
-          </ul>
+          {
+            this.state.trailData !== null &&
+            <ul>
+              {this.state.hiked.map(function(segId, index) {
+                let feature = this.getGeojsonFeature(segId);
+                return <li key={index}>{segId} ({feature.properties['GISPROD3.OSMP.TrailsOSMP.TRAILNAME']})</li>;
+              }.bind(this))}
+            </ul>
+          }
         </div>
       </div>
     );
