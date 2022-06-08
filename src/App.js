@@ -1,7 +1,6 @@
 import { Component, createRef } from 'react'
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
 
-import './App.css';
 import getData from './util.js'
 
 
@@ -53,25 +52,23 @@ class App extends Component {
     if (
       typeof feature !== 'undefined'
       && feature !== null
-      && this.hasHiked(feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"])
+      && this.hasHiked(feature.properties['GISPROD3.OSMP.TrailsOSMP.SEGMENTID'])
     ){
-      return {color: "#4B1BDE"}
+      return {color: '#4B1BDE'}
     }
   };
 
   render() {
     return (
-      <div>
-        <div>
-          {JSON.stringify(this.state.hiked)}
-        </div>
+      <div style={{height: '100vh', overflow: 'hidden'}}>
         <MapContainer 
-          center={[40.0, -105.25]}
-          zoom={13}
+          center={[40.013970, -105.252197]}
+          zoom={17}
+          style={{width: '100%', height: '70vh'}}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
           {
             this.state.trailData !== null && 
@@ -82,9 +79,8 @@ class App extends Component {
               ref={this.geojsonRef}
               style={this.styleGeojson}
               onEachFeature={(feature, layer) => {
-                const segId = feature.properties["GISPROD3.OSMP.TrailsOSMP.SEGMENTID"];
-                const trailName = feature.properties["GISPROD3.OSMP.TrailsOSMP.TRAILNAME"]
-
+                const segId = feature.properties['GISPROD3.OSMP.TrailsOSMP.SEGMENTID'];
+                const trailName = feature.properties['GISPROD3.OSMP.TrailsOSMP.TRAILNAME']
                 layer.on({
                   'mouseover': (e) => {
                     const tooltip = this.hasHiked(segId) ? trailName + '<br>Hiked!!' : trailName;
@@ -104,7 +100,7 @@ class App extends Component {
                   'click': (e) => {
                     this.handleSegClick(segId);
                     if (this.hasHiked(segId)) {
-                      layer.setStyle({color: "#4B1BDE"});
+                      layer.setStyle({color: '#4B1BDE'});
                     } else {
                       this.geojsonRef.current.resetStyle(e.target);
                     }
@@ -114,6 +110,14 @@ class App extends Component {
             />
           }
         </MapContainer>
+        <div style={{height: '30vh', overflow: 'scroll'}}>
+          <ul>
+            {this.state.hiked.map(function(segId, index) {
+              let feature = this.getGeojsonFeature(segId);
+              return <li key={index}>{segId}</li>;
+            })}
+          </ul>
+        </div>
       </div>
     );
   }
