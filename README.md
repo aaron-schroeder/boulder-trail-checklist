@@ -1,6 +1,11 @@
 # Boulder Trails Checklist
 <!--img src="Logotype primary.png" width="60%" height="60%" /-->
 
+Map trails you've hiked in Boulder's OSMP system. 
+
+Loads public data from an ArcGIS MapServer hosted by the City of Boulder, displays the
+trails on a map of Boulder, and keeps track of which trails you've hiked (toggle by clicking on trail segments).
+
 This project was started with [Create React App](https://github.com/facebook/create-react-app).
 
 
