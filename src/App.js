@@ -13,6 +13,7 @@ class App extends Component {
       trailData: null
     }
 
+    this.mapRef = createRef();
     this.geojsonRef = createRef();
 
     this.getData = getData.bind(this);
@@ -24,7 +25,10 @@ class App extends Component {
 
   componentDidMount() {
     this.getData()
-      .then(geojsonData => this.setState({trailData: geojsonData}));
+      .then(geojsonData => this.setState({trailData: geojsonData}))
+      .then(() => {
+        this.mapRef.current.fitBounds(this.geojsonRef.current.getBounds())
+      })
   }
 
   setState(state) {
@@ -74,6 +78,7 @@ class App extends Component {
         <MapContainer 
           center={[40.013970, -105.252197]}
           zoom={17}
+          whenCreated={mapInstance => {this.mapRef.current = mapInstance}}
           style={{width: '100%', height: '70vh'}}
         >
           <TileLayer
